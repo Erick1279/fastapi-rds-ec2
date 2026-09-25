@@ -1,8 +1,7 @@
 from typing import Optional, List
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlmodel import SQLModel, Field
 
-# ================= Entidad 1: Productos =================
 class ProductoBase(SQLModel):
     nombre: str
     categoria: str
@@ -21,18 +20,16 @@ class ProductoModificar(SQLModel):
     precio: Optional[float] = None
     stock: Optional[int] = None
 
-
-# ================= Entidad 2: Pedidos =================
 class PedidoBase(SQLModel):
     cliente: str
     producto_id: int
     cantidad: int
     total: float
-    estado: str = "pendiente"  # pendiente, pagado, cancelado
+    estado: str = "pendiente" 
 
 class Pedido(PedidoBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    fecha_creacion: datetime = Field(default_factory=datetime.utcnow)
+    fecha_creacion: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class PedidoCrear(PedidoBase):
     pass
